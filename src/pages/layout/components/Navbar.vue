@@ -1,8 +1,8 @@
 <template>
     <div class="navbar">
-        <!-- <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"></hamburger> -->
+        <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"></hamburger>
 
-        <!-- <breadcrumb class="breadcrumb-container"></breadcrumb> -->
+        <breadcrumb class="breadcrumb-container"></breadcrumb>
 
         <div class="right-menu">
             <template v-if="device!=='mobile'">
@@ -40,17 +40,13 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-// import Breadcrumb from '@/components/Breadcrumb'
-// import Hamburger from '@/components/Hamburger'
-// import ErrorLog from '@/components/ErrorLog'
-// import Screenfull from '@/components/Screenfull'
+import Breadcrumb from '@/components/Breadcrumb'
+import Hamburger from '@/components/Hamburger'
 
 export default {
     components: {
-        // Breadcrumb,
-        // Hamburger,
-        // ErrorLog,
-        // Screenfull,
+        Breadcrumb,
+        Hamburger
     },
     methods: {
         toggleSideBar() {
@@ -61,6 +57,14 @@ export default {
                 location.reload()
             })
         }
+    },
+    computed: {
+        ...mapGetters([
+            'sidebar',
+            'name',
+            'avator',
+            'device'
+        ])
     }
 }
 </script>
