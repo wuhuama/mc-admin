@@ -19,40 +19,25 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: () => import('@/pages/login/login'),
-      hidden: true
+      // hidden: true
     },{
-      path: '',
+      path: '/',
+      name: 'dashboard',
       component: Layout,
       redirect: 'dashboard',
-      name: 'dashboard',
       children: [
         {
           path: 'dashboard',
-          component: () => import('@/pages/dashboard/index'),
           name: 'Dashboard',
-          mata: {
-            title: 'dashboard',
-            icon: 'dashboard',
-            noCache: true
-          }
-        }
-      ]
-    },{
-      path: '/documentation',
-      component: Layout,
-      redirect: '/documentation/index',
-      children: [
-        {
-          path: 'index',
-          component: () => import('@/pages/documentation/index'),
-          name: 'Documentation',
+          component: () => import('@/pages/dashboard/index'),
           meta: {
-            title: 'documentation',
-            icon: 'documentation',
+            title: 'dashboard',
+            icon: 'dashbosrd',
             noCache: true
           }
         }
       ]
+      // hidden: true
     },{
       path: '/404',
       name: '404',

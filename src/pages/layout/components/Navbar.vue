@@ -6,17 +6,7 @@
 
         <div class="right-menu">
             <template v-if="device!=='mobile'">
-                <error-log class="errLog-container right-menu-item"/>>
-
-                <el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">
-                    <!-- <screenfull class="screenfull right-menu-item"></screenfull> -->
-                </el-tooltip>
-
-                <lang-select class="international right-menu-item"/>
-
-                <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
-                    <!-- <theme-picker class="theme-switch right-menu-item"/> -->
-                </el-tooltip>
+                <!-- <error-log class="errLog-container right-menu-item"/> -->
             </template>
 
             <el-dropdown class="avatar-container right-menu-item" trigger="click">
@@ -27,11 +17,11 @@
                 <el-dropdown-menu slot="dropdown">
                     <router-link to="/">
                         <el-dropdown-item>
-                        {{ $t('navbar.dashboard') }}
+                        {{ navbar.dashboard }}
                         </el-dropdown-item>
                     </router-link>
                     <el-dropdown-item>
-                        <span style="display:block;" @click="logout">{{$t('navbar.logOut')}}</span>
+                        <span style="display:block;" @click="logout">{{navbar.logOut}}</span>
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -48,6 +38,17 @@ export default {
         Breadcrumb,
         Hamburger
     },
+    computed: {
+        ...mapGetters([
+            'sidebar',
+            'name',
+            'avator',
+            'device'
+        ])
+    },
+    mounted () {
+        console.log(this.store)
+    },
     methods: {
         toggleSideBar() {
             this.$route.dispatch('toggleSideBar')
@@ -57,14 +58,6 @@ export default {
                 location.reload()
             })
         }
-    },
-    computed: {
-        ...mapGetters([
-            'sidebar',
-            'name',
-            'avator',
-            'device'
-        ])
     }
 }
 </script>

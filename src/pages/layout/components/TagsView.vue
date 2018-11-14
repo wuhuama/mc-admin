@@ -25,10 +25,10 @@
 </template>
 
 <script>
-// import ScrollPane from '@/components/ScrollPane'
+import ScrollPane from '@/components/ScrollPane'
 
 export default {
-  // components: { ScrollPane },
+  components: { ScrollPane },
   data() {
     return {
       visible: false,

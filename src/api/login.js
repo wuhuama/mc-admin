@@ -1,23 +1,12 @@
 import request from '@/utils/request'
 
 export function loginByUsername(username, password) {
-  var grant_type = 'password'
-  var scope = 'server'
-  var randomStr = new Date().getTime()
-  var code = ''
   const data = {
     username,
-    password,
-    randomStr,
-    code,
-    grant_type,
-    scope
+    password
   }
   return request({
-    url: '/auth/oauth/token',
-    headers: {
-      'Authorization': 'Basic Y29tLmdpdGh1Yi5saXV3ZWlqdzpjb20uZ2l0aHViLmxpdXdlaWp3Ljg4ODg4OA=='
-    },
+    url: '/login/login',
     method: 'post',
     params: data
   })
@@ -25,15 +14,17 @@ export function loginByUsername(username, password) {
 
 export function logout(accesstoken) {
   return request({
-    url: '/auth/auth/removeToken',
-    method: 'post',
-    params: { accesstoken }
+    url: '/login/logout',
+    method: 'post'
   })
 }
 
 export function getUserInfo() {
   return request({
-    url: '/admin/api/info',
-    method: 'get'
+    url: '/user/info',
+    method: 'get',
+    params: {
+      token
+    }
   })
 }

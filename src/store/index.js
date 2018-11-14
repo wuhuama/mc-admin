@@ -3,15 +3,17 @@ import Vuex from 'vuex'
 import app from './modules/app'
 import tagsView from './modules/tagView'
 import user from './modules/user'
-import getter from './getters'
+import getters from './getters'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-    app,
-    tagsView,
-    user,
-    getter
+    modules: {
+        app,
+        tagsView,
+        user,
+    },
+    getters
 })
 
 export default store

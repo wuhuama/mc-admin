@@ -1,13 +1,13 @@
 <template>
     <div id='login-page' @keyup.enter='login'>
-        <div class="login-form">
+        <div class="login-form" ref="loginForm" :model="loginForm" :rules="loginRules">
             <div class="input-group">
                 <div class="title">登录</div>
                 <el-input 
                 :autofocus='true'
                 placeholder="请输入用户名"
                 icon='name'
-                v-model="username"
+                v-model="loginForm.username"
                 ></el-input>
             </div>
             <div class="input-group">
@@ -15,8 +15,11 @@
                 placeholder="请输入密码"
                 type="password"
                 icon="time"
-                v-model="password"
+                v-model="loginForm.password"
                 ></el-input>
+                <span class="show-pwd" @click="showPwd">
+                    <svg-icon icon-class="eye" />>
+                </span>
             </div>
             <div class="input-group">
                 <label for="">记住我?</label>
@@ -33,16 +36,39 @@
     </div>
 </template>
 <script>
+import { isvalidUsername } from '@/utils/validate'
 import { requestLogin } from '@/api/api'
 
 export default {
+    name: 'Login',
     data () {
+        const validateUsername = (rule, value, callback) => {
+            if (!isvalidUsername(value)) {
+                callback( new Error('请输入合法的昵称'))
+            } else {
+                callback()
+            }
+        }
+        const validatePassword = (rule, value, callback) => {
+            if (value.length < 6) {
+                callback( new Error('密码至少为6位字符'))
+            } else {
+                callback()
+            }
+        }
         return {
-            username: 'nimda',
-            password: '123456',
+            loginForm:{
+                username: 'admin',
+                password: '123456',
+            },
+            loginRules: {
+                username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+                password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+            },
+            passwordType: 'password',
             remember: false,
             isBtnLoading: false,
-            // btnText: '登录'
+            redirect: undefined
         }
     },
     computed: {
@@ -51,33 +77,37 @@ export default {
             return '登录';
         }
     },
+    watch: {
+        $route: {
+            handler: function (route) {
+                this.redirect = route.query && route.query.redirect
+            },
+            immediate: true
+        }
+    },
     methods: {
+        showPwd() {
+            if (this.passwordType === 'password') {
+                this.password = ''
+            } else {
+                this.passwordType = 'password'
+            }
+        },
         login () {
-            if (!this.username) {
-                this.$message.error('请填写用户名哦')
-                return
-            }
-            if(!this.password) {
-                this.$message.error('请填写密码')
-                return
-            }
-            let loginParams = {username: this.username, password: this.password};
-            this.isBtnLoading = true;
-            requestLogin(loginParams).then(data => {
-                this.isBtnLoading = false
-                let { msg, code, user } = data
-                if (code !== 200) {
-                    this.$message.error(msg)
+            this.$refs.loginForm.validate(valid => {
+                if (valid) {
+                    this.isBtnLoading = true;
+                    this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+                        this.isBtnLoading = false
+                        this.$router.push({ path: this.redirect || '/' })
+                    }).catch(error => {
+                        this.isBtnLoading = false
+                    })
+                } else {
+                    console.log('登录失败')
+                    return false
                 }
-                else {
-                    localStorage.setItem('user', JSON.stringify(user))
-                    if (this.$route.query.redirect) {
-                        this.$router.push({path: this.route.redirect})
-                    } else {
-                        this.$router.push({ path: '/list' })
-                    }
-                }
-            })
+            }) 
         }
     }
 }
@@ -114,8 +144,18 @@ export default {
         .input-group{
             margin-top: 30px;
             width: 80%;
+            position: relative;
             button {
                 width: 100%
+            }
+            .show-pwd {
+                position: absolute;
+                right: 10px;
+                top: 7px;
+                font-size: 16px;
+                color: #ccc;
+                cursor: pointer;
+                user-select: none;
             }
         }
     }

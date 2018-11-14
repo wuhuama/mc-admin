@@ -1,24 +1,34 @@
 <template>
-    <div :class='classObj' class="app-wrapper">
+    <div :class="classObj" class="app-wrapper">
         <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
-        <sildebar class="sidebar-container"></sildebar>
+        <!-- <sidebar class="sidebar-container"></sidebar> -->
         <div class="main-container">
             <navbar></navbar>
-            <tags-view></tags-view>
-            <app-main></app-main>
+            <!-- <tags-view></tags-view>
+            <app-main></app-main> -->
         </div>
     </div>
 </template>
 <script>
-import { Navbar, Sidebar, TagsView,AppMain } from './components'
+import { Navbar, Sidebar, TagsView, AppMain } from './components'
+import { mapGetters } from 'vuex'
 // import ResizeMixin from './mixin/ResizeHandler'
 export default {
     name: 'Layout',
     components: {
-        Navbar
+        Navbar,
+        // Sidebar,
+        // TagsView,
+        // AppMain
     },
     // mixins: [ResizeMixin],
-    computed: {
+    computed:{
+        sidebar() {
+            return this.$store.state.app.sidebar
+        },
+        device() {
+            return this.$store.state.app.device
+        },
         classObj () {
             return {
                 hideSidebar: !this.sidebar.opened,
@@ -26,7 +36,13 @@ export default {
                 widthoutAnimation: this.sidebar.widthoutAnimation,
                 mobile: this.device === 'mobile'
             }
-        }
+        },
+        ...mapGetters([
+            'sidebar',
+            'name',
+            'avator',
+            'device'
+        ])
     }
 }
 </script>

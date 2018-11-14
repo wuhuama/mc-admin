@@ -1,20 +1,20 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
-// import { getToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const $http = axios.create({
-  // baseURL: process.env.BASE_API, // api的base_url
+  baseURL: process.env.BASE_API, // api的base_url
   timeout: 30000 // request timeout
 })
 
 // request interceptor
 $http.interceptors.request.use(config => {
   // Do something before request is sent
-  // if (store.getters.token) {
-  //   config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-  // }
+  if (store.getters.token) {
+    config.headers['X-Token'] = getToken() // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
+  }
   return config
 }, error => {
   // Do something with request error
@@ -24,6 +24,9 @@ $http.interceptors.request.use(config => {
 
 // respone interceptor
 $http.interceptors.response.use(
+  /**
+   * 以下是通过自定义code来表示请求状态
+   */
   response => {
     const res = response.data
     if (res.code === -1) {
