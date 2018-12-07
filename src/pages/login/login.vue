@@ -38,6 +38,7 @@
 <script>
 import { isvalidUsername } from '@/utils/validate'
 import { requestLogin } from '@/api/api'
+import axios from 'axios'
 
 export default {
     name: 'Login',
@@ -84,6 +85,11 @@ export default {
             },
             immediate: true
         }
+    },
+    mounted () {
+        axios.get('/api').then((response) => {
+        console.log(response)
+        })
     },
     methods: {
         showPwd() {
